@@ -1,7 +1,12 @@
 import "./App.css";
+import { Container } from "./components";
 
 function App() {
-  return <div className="max-h-screen flex flex-col"></div>;
+  return (
+    <Container>
+      <div className="pt-4">App Body</div>
+    </Container>
+  );
 }
 
 export default App;
