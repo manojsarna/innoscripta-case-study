@@ -1,37 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
-import { Container } from "./components";
-import { Article } from "./types/Article";
-import { fetchNews } from "./services/newsService";
+import { Articles, Container, Skeleton } from "./components";
+import { STORED_THEME_KEY } from "./constants";
+import { useNewsStore, useTheme } from "./store";
 
 function App() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [query, setQuery] = useState<string>("technology");
+  const { loading, query, loadNews } = useNewsStore((state) => state);
 
   useEffect(() => {
-    const loadNews = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const news = await fetchNews(query);
-        setArticles(news);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadNews();
-  }, [query]);
-  console.log(articles);
+  }, [loadNews, query]);
+
+  const { theme, setTheme } = useTheme((state) => state);
+
+  function getInitialTheme() {
+    const storedTheme = localStorage.getItem(STORED_THEME_KEY);
+    if (storedTheme) return storedTheme;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  useEffect(() => {
+    const initialTheme = getInitialTheme();
+    setTheme(initialTheme);
+  }, [setTheme]);
 
   return (
-    <Container>
-      <div className="pt-4">App Body</div>
-    </Container>
+    <div className={theme === "dark" ? "dark" : "light"}>
+      <Container>{loading ? <Skeleton /> : <Articles />}</Container>
+    </div>
   );
 }
 

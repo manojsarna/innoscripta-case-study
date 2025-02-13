@@ -10,7 +10,7 @@ export const mapNewsAPIResponse = (data: any): Article[] => {
       url: article.url || "#",
       articleImage: article.urlToImage || "",
       publishedAt: article.publishedAt || new Date().toISOString(),
-      source: { name: article.source?.name || "Unknown Source" },
+      source: { name: "The News API" },
     })) || []
   );
 };
