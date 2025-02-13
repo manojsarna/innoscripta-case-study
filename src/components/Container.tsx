@@ -6,17 +6,17 @@ interface ContainerProps {
   classNames?: string;
   children: ReactNode;
 }
-export function Container({ classNames, children }: ContainerProps) {
+export function Container({ classNames = "", children }: ContainerProps) {
   return (
-    <div className="flex flex-col w-full h-full min-h-screen bg-gray-100 text-black">
+    <div className="flex flex-col w-full h-full min-h-screen bg-gray-100 text-black dark:bg-gray-800 dark:text-white">
       <Header />
-      <div
+      <main
         className={`flex-grow items-start max-w-screen-xl mx-auto mt-16 ${
           classNames ?? ""
         }`}
       >
         {children}
-      </div>
+      </main>
       <Footer />
     </div>
   );
