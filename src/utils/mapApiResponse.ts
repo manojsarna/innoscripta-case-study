@@ -34,7 +34,7 @@ export const mapNYTimesResponse = (data: any): Article[] => {
       title: doc.headline?.main || "No title available",
       description: doc.abstract || "No description",
       url: doc.web_url || "#",
-      articleImage: `${NYTIMES_URL}${doc.multimedia[0].url}` || "",
+      articleImage: `${NYTIMES_URL}${doc.multimedia[0]?.url}` || "",
       publishedAt: doc.pub_date || new Date().toISOString(),
       source: { name: "The New York Times" },
     })) || []
