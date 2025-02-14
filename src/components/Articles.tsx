@@ -58,12 +58,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     return <Skeleton />;
   }
 
-  // Handle error cases
   const articles = data?.pages.flat() ?? [];
-
-  console.log("Infinite Query Data:", data);
-  console.log("Flattened Articles:", articles);
-  console.log("Page Params:", data?.pageParams);
 
   if (error || articles.length === 0) {
     const errorMessage = error
@@ -76,7 +71,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
 
   return (
     <div
-      className={`p-4 mx-auto lg:max-w-screen-xl sm:max-w-screen-xl md:max-w-full ${classNames}`}
+      className={`p-4 mx-auto lg:max-w-screen-xl sm:max-w-screen-xl md:max-w-full scroll-smooth snap-y snap-mandatory ${classNames}`}
     >
       <div className="grid gap-x-8 gap-y-12 sm:gap-y-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {articles.map((item: Article, index) => (

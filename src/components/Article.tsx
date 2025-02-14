@@ -24,17 +24,15 @@ export const Article = forwardRef<HTMLDivElement, ArticleProps>(
     const [imageSrc, setImageSrc] = useState(articleImage || DEFAULT_IMAGE);
 
     return (
-      <article ref={ref} className="flex flex-col gap-4">
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block group rounded-xl shadow-xl dark:shadow-2xl overflow-hidden"
-        >
+      <article
+        ref={ref}
+        className="flex flex-col gap-4 group rounded-xl shadow-xl dark:shadow-2xl overflow-hidden transition-opacity duration-500 opacity-0 animate-fadeIn"
+      >
+        <a href={url} target="_blank" rel="noopener noreferrer">
           <img
             src={imageSrc}
             alt={`Image for ${title}`}
-            className="w-full aspect-[16/9] object-cover transition-transform duration-300 ease-out group-hover:scale-104"
+            className="w-full aspect-[16/9] object-cover transition-transform duration-300 ease-out group-hover:scale-105 opacity-0 animate-fadeIn"
             loading="lazy"
             width={800}
             height={450}

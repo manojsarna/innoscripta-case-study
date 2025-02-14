@@ -16,7 +16,7 @@ export const fetchNews = async ({
   query,
   filters = {},
   page = 1,
-  pageSize = 20,
+  pageSize = 10,
 }: FetchNewsParams): Promise<Article[]> => {
   try {
     const [newsResponse, guardianResponse, nytResponse] =
