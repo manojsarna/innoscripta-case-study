@@ -11,7 +11,7 @@ export function Container({ classNames = "", children }: ContainerProps) {
     <div className="flex flex-col w-full h-full min-h-screen bg-gray-100 text-black dark:bg-gray-800 dark:text-white">
       <Header />
       <main
-        className={`flex-grow items-start max-w-screen-xl mx-auto mt-16 ${
+        className={`w-full flex-grow items-start max-w-screen-xl mx-auto mt-16 ${
           classNames ?? ""
         }`}
       >
