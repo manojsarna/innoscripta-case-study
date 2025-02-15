@@ -8,7 +8,7 @@ interface FilterModalProps {
 export function FilterModal({ onClose }: FilterModalProps) {
   return (
     <div
-      className="w-full fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-50 backdrop-blur-md pointer-events-auto"
+      className="w-full px-2 fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-50 backdrop-blur-md pointer-events-auto"
       onClick={onClose}
     >
       <div
