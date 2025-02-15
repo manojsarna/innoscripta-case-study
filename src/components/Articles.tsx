@@ -4,7 +4,7 @@ import { useNewsFilterStore, useNewsStore } from "../store";
 import { Article as ArticleComponent } from "./Article";
 import { Skeleton } from "./Skeleton";
 import { Error } from "./Error";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Article } from "../types/Article";
 import { FaArrowUp, FaFilter } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
@@ -21,6 +21,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
   const lastArticleElementRef = useRef<HTMLDivElement | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const debounceTimeout = useRef<number | null>(null);
 
   const {
     data,
@@ -40,15 +41,30 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     retry: 1, // Retry once on failure
   });
 
+  // Custom debounced function inside useCallback
+  const debouncedFetchNextPage = useCallback(() => {
+    if (debounceTimeout.current !== null) {
+      clearTimeout(debounceTimeout.current);
+    }
+    debounceTimeout.current = window.setTimeout(() => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage().catch((err) =>
+          console.error("Error fetching next page:", err)
+        );
+      }
+    }, 300); // 300ms debounce delay
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
   // Intersection Observer: Load more articles when the last one is visible
   useEffect(() => {
     if (!hasNextPage || isFetchingNextPage) return;
 
+    // Disconnect previous observer if it exists
+    observerRef.current?.disconnect();
+
     observerRef.current = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
-        fetchNextPage().catch((err) =>
-          console.error("Error fetching next page:", err)
-        );
+        debouncedFetchNextPage();
       }
     });
 
@@ -57,11 +73,21 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     }
 
     return () => observerRef.current?.disconnect();
-  }, [isFetchingNextPage, fetchNextPage, hasNextPage]);
+  }, [
+    isFetchingNextPage,
+    debouncedFetchNextPage,
+    hasNextPage,
+    query,
+    selectedSource,
+    selectedDate,
+    selectedCategory,
+  ]);
 
   // Track scroll position to show the "Scroll to Top" button
   const handleScroll = useCallback(() => {
-    setShowScrollTop(window.scrollY > 300);
+    requestAnimationFrame(() => {
+      setShowScrollTop(window.scrollY > 300);
+    });
   }, []);
 
   // Track scrolling for showing the scroll-to-top button
@@ -74,31 +100,29 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const filteredArticles = useMemo(() => {
+    return (data?.pages.flat() ?? []).filter((article) => {
+      const articleDate = article.publishedAt?.split("T")[0];
+      const [startDate, endDate] = selectedDate ?? [null, null];
+
+      if (selectedSource && article.source?.name !== selectedSource)
+        return false;
+      if (selectedCategory && article?.category !== selectedCategory)
+        return false;
+      if (startDate && endDate && articleDate) {
+        return articleDate >= startDate && articleDate <= endDate;
+      }
+
+      return true;
+    });
+  }, [data, selectedSource, selectedCategory, selectedDate]);
+
   // Show loading skeleton when fetching data
-  if (isLoading) {
+  if (isLoading || filteredArticles.length === 0) {
     return <Skeleton />;
   }
 
-  // Filter articles based on source and date
-  const filteredArticles = (data?.pages.flat() ?? []).filter((article) => {
-    const articleDate = article.publishedAt?.split("T")[0]; // Extract YYYY-MM-DD
-    const [startDate, endDate] = selectedDate ?? [null, null];
-
-    if (selectedSource && article.source?.name !== selectedSource) return false;
-
-    if (selectedCategory && article?.category !== selectedCategory)
-      return false;
-
-    if (startDate && endDate && articleDate) {
-      return articleDate >= startDate && articleDate <= endDate;
-    }
-
-    return true; // If no date range is selected, show all articles
-  });
-
-  // console.log(filteredArticles);
-
-  if (error || filteredArticles.length === 0) {
+  if (error) {
     const errorMessage = error
       ? error?.message.includes("404")
         ? `No articles found. Try a different search.`
