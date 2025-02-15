@@ -29,7 +29,7 @@ export function Header({ classNames = "" }: HeaderProps) {
         <div className="flex items-center gap-2 pointer-events-none">
           <div className="h-8 w-8 pt-0.5">
             <img
-              src="/src/icons/inno-news.svg"
+              src="images/inno-news.svg"
               alt="Logo"
               style={{
                 objectFit: "contain",
