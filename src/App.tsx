@@ -41,7 +41,7 @@ function App() {
       <div className={theme === "dark" ? "dark" : "light"}>
         <Container>
           <SearchBar />
-          <Filters />
+          {/* <Filters /> */}
           <Articles />
         </Container>
       </div>

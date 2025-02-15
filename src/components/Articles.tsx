@@ -6,7 +6,8 @@ import { Skeleton } from "./Skeleton";
 import { Error } from "./Error";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Article } from "../types/Article";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaFilter } from "react-icons/fa";
+import { FilterModal } from "./FilterModal";
 
 interface ArticlesProps {
   classNames?: string;
@@ -19,6 +20,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const lastArticleElementRef = useRef<HTMLDivElement | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const {
     data,
@@ -28,7 +30,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery<Article[], Error>({
-    queryKey: ["news", query, selectedSource, selectedDate],
+    queryKey: ["news", query, selectedSource, selectedDate, selectedCategory],
     queryFn: ({ pageParam = 1 }) =>
       fetchNews({ query, page: Number(pageParam) }),
     initialPageParam: 1,
@@ -94,14 +96,14 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     return true; // If no date range is selected, show all articles
   });
 
-  console.log(filteredArticles);
+  // console.log(filteredArticles);
 
   if (error || filteredArticles.length === 0) {
     const errorMessage = error
       ? error?.message.includes("404")
-        ? `No articles found for "${query}". Try a different search.`
+        ? `No articles found. Try a different search.`
         : "Something went wrong. Please try again later."
-      : `No articles found for "${query}". Try another topic.`;
+      : `No articles found. Try another topic.`;
     return <Error errorMessage={errorMessage} />;
   }
 
@@ -112,7 +114,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
       <div className="grid gap-x-8 gap-y-12 sm:gap-y-16 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredArticles.map((item: Article, index) => (
           <ArticleComponent
-            key={item.publishedAt}
+            key={`${item.publishedAt}${item.title}`}
             {...item}
             ref={
               index === filteredArticles.length - 1
@@ -122,15 +124,32 @@ export function Articles({ classNames = "" }: ArticlesProps) {
           />
         ))}
       </div>
+
       {isFetchingNextPage && <Skeleton />}
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
+
+      {/* Floating Buttons */}
+      <div className="fixed bottom-5 right-5 flex flex-col space-y-3">
+        {/* Filter Button */}
         <button
-          onClick={scrollToTop}
-          className="fixed bottom-5 right-5 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 cursor-pointer"
+          onClick={() => setShowFilterModal(true)}
+          className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
         >
-          <FaArrowUp className="w-5 h-5" />
+          <FaFilter className="w-5 h-5" />
         </button>
+
+        {/* Scroll to Top Button */}
+        {showScrollTop && (
+          <button
+            onClick={scrollToTop}
+            className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 cursor-pointer"
+          >
+            <FaArrowUp className="w-5 h-5" />
+          </button>
+        )}
+      </div>
+      {/* Filter Modal */}
+      {showFilterModal && (
+        <FilterModal onClose={() => setShowFilterModal(false)} />
       )}
     </div>
   );
