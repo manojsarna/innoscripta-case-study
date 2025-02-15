@@ -52,14 +52,18 @@ export function SearchBar() {
     };
   }, [typingState, currentText, input]); // Restart animation when input is cleared
 
-  // Debounce effect for search query (Only updates when necessary)
+  // Debounce effect for search query
   useEffect(() => {
     if (!input.trim()) return;
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     timeoutRef.current = setTimeout(() => {
-      setQuery(input);
+      if (input.trim()) {
+        setQuery(input);
+      } else {
+        setQuery("technology");
+      }
     }, DEBOUNCE_DELAY);
 
     return () => {
