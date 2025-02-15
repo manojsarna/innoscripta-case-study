@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { Article } from "../types/Article";
-import { fetchNews } from "../services/newsService";
+//import { fetchNews } from "../services/newsService";
 
 interface NewsState {
   articles: Article[];
@@ -11,7 +11,7 @@ interface NewsState {
   // loadNews: () => Promise<void>;
 }
 
-export const useNewsStore = create<NewsState>((set, get) => ({
+export const useNewsStore = create<NewsState>((set) => ({
   articles: [],
   loading: false,
   error: null,

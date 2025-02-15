@@ -10,7 +10,7 @@ export const mapNewsAPIResponse = (data: any): Article[] => {
       url: article.url || "#",
       articleImage: article.urlToImage || "",
       publishedAt: article.publishedAt || new Date().toISOString(),
-      source: { name: "The News API" },
+      source: { name: article?.source?.name || "The News API" },
       author: article.author || "",
     })) || []
   );
@@ -26,6 +26,7 @@ export const mapGuardianResponse = (data: any): Article[] => {
       publishedAt: result.webPublicationDate || new Date().toISOString(),
       source: { name: "The Guardian" },
       author: result?.tags[0]?.webTitle || "",
+      category: result?.sectionName,
     })) || []
   );
 };
@@ -38,8 +39,9 @@ export const mapNYTimesResponse = (data: any): Article[] => {
       url: doc.web_url || "#",
       articleImage: `${NYTIMES_URL}${doc.multimedia[0]?.url}` || "",
       publishedAt: doc.pub_date || new Date().toISOString(),
-      source: { name: "The New York Times" },
+      source: { name: doc.source || "The New York Times" },
       author: doc?.byline?.original?.slice(3) || "",
+      category: doc?.section_name,
     })) || []
   );
 };

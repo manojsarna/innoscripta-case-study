@@ -4,6 +4,7 @@ import { Articles, Container, SearchBar } from "./components";
 import { STORED_THEME_KEY } from "./constants";
 import { useTheme } from "./store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Filters } from "./components/Filters";
 
 function App() {
   const { theme, setTheme } = useTheme((state) => state);
@@ -40,6 +41,7 @@ function App() {
       <div className={theme === "dark" ? "dark" : "light"}>
         <Container>
           <SearchBar />
+          <Filters />
           <Articles />
         </Container>
       </div>
