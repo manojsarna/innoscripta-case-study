@@ -1,16 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import "./App.css";
-import { Articles, Container, Skeleton } from "./components";
+import { Articles, Container, SearchBar } from "./components";
 import { STORED_THEME_KEY } from "./constants";
-import { useNewsStore, useTheme } from "./store";
+import { useTheme } from "./store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Filters } from "./components/Filters";
 
 function App() {
-  const { loading, query, loadNews } = useNewsStore((state) => state);
-
-  useEffect(() => {
-    loadNews();
-  }, [loadNews, query]);
-
   const { theme, setTheme } = useTheme((state) => state);
 
   function getInitialTheme() {
@@ -26,10 +22,30 @@ function App() {
     setTheme(initialTheme);
   }, [setTheme]);
 
+  // const { loading, query, loadNews } = useNewsStore((state) => state);
+
+  // useEffect(() => {
+  //   loadNews();
+  // }, [loadNews, query]);
+  // const isFetching = useIsFetching();
+
+  // Memoize queryClient to prevent recreation on every render
+  const queryClient = useMemo(() => new QueryClient(), []);
+
+  // useEffect(() => {
+  //   queryClient.clear();
+  // }, [queryClient]);
+
   return (
-    <div className={theme === "dark" ? "dark" : "light"}>
-      <Container>{loading ? <Skeleton /> : <Articles />}</Container>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className={theme === "dark" ? "dark" : "light"}>
+        <Container>
+          <SearchBar />
+          <Filters />
+          <Articles />
+        </Container>
+      </div>
+    </QueryClientProvider>
   );
 }
 

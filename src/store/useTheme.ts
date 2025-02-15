@@ -1,13 +1,13 @@
 import { create } from "zustand";
 import { STORED_THEME_KEY } from "../constants";
 
-interface ThemeStateProps {
+interface ThemeState {
   theme: string;
   setTheme: (theme: string) => void;
   toggleTheme: () => void;
 }
 
-export const useTheme = create<ThemeStateProps>((set, get) => ({
+export const useTheme = create<ThemeState>((set, get) => ({
   theme: "dark",
   setTheme: (theme: string) => set({ theme }),
   toggleTheme: () => {

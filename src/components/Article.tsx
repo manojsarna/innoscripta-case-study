@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, forwardRef } from "react";
 import { formatDate } from "../utils/formatDate";
 import { DEFAULT_IMAGE } from "../constants";
 
@@ -15,63 +15,57 @@ interface ArticleProps {
   author?: string;
 }
 
-export function Article({
-  title,
-  description,
-  url,
-  articleImage,
-  publishedAt,
-  source,
-}: ArticleProps) {
-  const formattedDate = formatDate(publishedAt);
-  const [imageSrc, setImageSrc] = useState(articleImage || DEFAULT_IMAGE);
-  return (
-    <article className="flex flex-col gap-4">
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block overflow-hidden group rounded-xl shadow-lg"
+export const Article = forwardRef<HTMLDivElement, ArticleProps>(
+  (
+    { title, description, url, articleImage, publishedAt, source, author },
+    ref
+  ) => {
+    const formattedDate = useMemo(() => formatDate(publishedAt), [publishedAt]);
+    const [imageSrc, setImageSrc] = useState(articleImage || DEFAULT_IMAGE);
+
+    return (
+      <article
+        ref={ref}
+        className="flex flex-col gap-4 group rounded-xl shadow-xl dark:shadow-2xl overflow-hidden transition-opacity duration-500 opacity-0 animate-fadeIn"
       >
-        <img
-          src={imageSrc}
-          alt={`Image for ${title}`}
-          className="object-cover w-full h-56 transition-transform duration-300 ease-out sm:h-64 group-hover:scale-110"
-          loading="lazy"
-          onError={() => setImageSrc(DEFAULT_IMAGE)}
-        />
-      </a>
-      <div className="flex flex-col gap-2">
-        <p className="uppercase font-semibold text-xs text-purple-600">
-          {formattedDate}
-        </p>
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block hover:underline"
-        >
-          <h2 className="text-xl font-bold leading-5 text-black dark:text-white hover:text-purple-700 dark:hover:text-purple-400">
-            {title}
-          </h2>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <img
+            src={imageSrc}
+            alt={`Image for ${title}`}
+            className="w-full aspect-[16/9] object-cover transition-transform duration-300 ease-out group-hover:scale-105 opacity-0 animate-fadeIn"
+            loading="lazy"
+            width={800}
+            height={450}
+            onError={() => setImageSrc(DEFAULT_IMAGE)}
+          />
+          <div className="p-3 flex flex-col gap-1">
+            <p className="uppercase font-semibold text-xs text-purple-600">
+              {formattedDate}
+            </p>
+            <h2 className="text-lg font-bold leading-5 text-black dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400">
+              {title}
+            </h2>
+            <span className="block text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+              Source: {source.name}
+            </span>
+            <p className="text-gray-700 dark:text-gray-300">
+              {description?.length > 160
+                ? `${description.slice(0, 157)}...`
+                : description}
+            </p>
+            {author && (
+              <span className="block text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                Author: {author}
+              </span>
+            )}
+            <span className="text-sm font-medium underline text-purple-600 dark:text-purple-400">
+              Read More
+            </span>
+          </div>
         </a>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          {`By - ${source.name}`}
-        </span>
-        <p className="text-gray-700 dark:text-gray-300 w-full">
-          {description?.length > 160
-            ? `${description.slice(0, 157)}...`
-            : description}
-        </p>
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-medium underline text-purple-600 dark:text-purple-400"
-        >
-          Read More
-        </a>
-      </div>
-    </article>
-  );
-}
+      </article>
+    );
+  }
+);
+
+Article.displayName = "Article";
