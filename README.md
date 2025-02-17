@@ -2,8 +2,6 @@
 
 <div align="center">
 
-<img alt="innonews" src="/public/images/logo192.png" width="1048px" height="238px" />
-
 Inno News - News Aggregator App using React, TypeScript, Tailwind CSS, Zustand, React Query , Public News API
 
 [![GitHub followers](https://img.shields.io/github/followers/manojsarna?style=social)](https://github.com/manojsarna)
