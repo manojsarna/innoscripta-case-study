@@ -117,6 +117,12 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     });
   }, [data, selectedSource, selectedCategory, selectedDate]);
 
+  const storedPreferences = JSON.parse(
+    localStorage.getItem("userPreferences") || "{}"
+  );
+
+  console.log(storedPreferences);
+
   // Show loading skeleton when fetching data
   if (isLoading || filteredArticles.length === 0) {
     return <Skeleton />;

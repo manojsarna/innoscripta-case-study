@@ -1,12 +1,14 @@
 import Lottie from "lottie-react";
 import errorLottie from "../lottie/error404.json";
 import { useNewsFilterStore } from "../store";
+import { Navigate } from "react-router-dom";
 
 interface ErrorProps {
   errorMessage: string;
   classNames?: string;
+  from?: string;
 }
-export function Error({ errorMessage, classNames = "" }: ErrorProps) {
+export function Error({ errorMessage, classNames = "", from }: ErrorProps) {
   const { resetFilters } = useNewsFilterStore();
   return (
     <div
@@ -18,12 +20,16 @@ export function Error({ errorMessage, classNames = "" }: ErrorProps) {
       <p className="text-center text-red-600 dark:text-red-400">
         {errorMessage}
       </p>
-      <span
-        className="text-sm font-medium underline text-purple-600 dark:text-purple-400 cursor-pointer"
-        onClick={resetFilters}
-      >
-        Reset Filters
-      </span>
+      {from === "Articles" ? (
+        <span
+          className="text-sm font-medium underline text-purple-600 dark:text-purple-400 cursor-pointer"
+          onClick={resetFilters}
+        >
+          Reset Filters
+        </span>
+      ) : (
+        <Navigate to={"/"} />
+      )}
     </div>
   );
 }

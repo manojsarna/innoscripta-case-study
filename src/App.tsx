@@ -1,9 +1,11 @@
 import { useEffect, useMemo } from "react";
 import "./App.css";
-import { Articles, Container, SearchBar } from "./components";
+import { Articles, Container, Error, SearchBar } from "./components";
 import { STORED_THEME_KEY } from "./constants";
 import { useTheme } from "./store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Preferences } from "./components/Preferences";
 
 function App() {
   const { theme, setTheme } = useTheme((state) => state);
@@ -37,13 +39,31 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className={theme === "dark" ? "dark" : "light"}>
-        <Container>
-          <SearchBar />
-          {/* <Filters /> */}
-          <Articles />
-        </Container>
-      </div>
+      <Router>
+        <div className={theme === "dark" ? "dark" : "light"}>
+          <Container>
+            <SearchBar />
+
+            <Routes>
+              {/* Home Route - Show Articles */}
+              <Route path="/" element={<Articles />} />
+
+              {/* Preferences Route */}
+              <Route path="/preferences" element={<Preferences />} />
+
+              {/* Preferences Route */}
+              <Route
+                path="*"
+                element={
+                  <Container>
+                    <Error errorMessage="Route Not Defined" />
+                  </Container>
+                }
+              />
+            </Routes>
+          </Container>
+        </div>
+      </Router>
     </QueryClientProvider>
   );
 }
