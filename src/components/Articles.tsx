@@ -1,13 +1,18 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchNews } from "../services/newsService";
-import { useNewsFilterStore, useNewsStore } from "../store";
+import {
+  useNewsFilterStore,
+  useNewsStore,
+  usePreferencesStore,
+} from "../store";
 import { Article as ArticleComponent } from "./Article";
 import { Skeleton } from "./Skeleton";
 import { Error } from "./Error";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Article } from "../types/Article";
-import { FaArrowUp, FaFilter } from "react-icons/fa";
+import { FaArrowUp, FaFilter, FaUser } from "react-icons/fa";
 import { FilterModal } from "./FilterModal";
+import { PreferenceModal } from "./PreferenceModal";
 
 interface ArticlesProps {
   classNames?: string;
@@ -21,7 +26,9 @@ export function Articles({ classNames = "" }: ArticlesProps) {
   const lastArticleElementRef = useRef<HTMLDivElement | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showPreferenceModal, setShowPreferenceModal] = useState(false);
   const debounceTimeout = useRef<number | null>(null);
+  const { selectedCategories } = usePreferencesStore();
 
   const {
     data,
@@ -31,9 +38,24 @@ export function Articles({ classNames = "" }: ArticlesProps) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery<Article[], Error>({
-    queryKey: ["news", query, selectedSource, selectedDate, selectedCategory],
+    queryKey: [
+      "news",
+      query,
+      selectedSource,
+      selectedDate,
+      selectedCategory,
+      selectedCategories,
+    ],
     queryFn: ({ pageParam = 1 }) =>
-      fetchNews({ query, page: Number(pageParam) }),
+      fetchNews({
+        query,
+        page: Number(pageParam),
+        filters: {
+          category: `${
+            selectedCategories ? selectedCategories.join(",").toLowerCase() : ""
+          }`,
+        },
+      }),
     initialPageParam: 1,
     getNextPageParam: (lastPage, pages) =>
       lastPage && lastPage.length > 0 ? pages.length + 1 : undefined,
@@ -155,6 +177,15 @@ export function Articles({ classNames = "" }: ArticlesProps) {
       <div className="fixed bottom-5 right-5 flex flex-col space-y-3">
         {/* Filter Button */}
         <button
+          onClick={() => setShowPreferenceModal(true)}
+          className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
+          title="Click To Filter Articles"
+        >
+          <FaUser className="w-5 h-5" />
+        </button>
+
+        {/* Filter Button */}
+        <button
           onClick={() => setShowFilterModal(true)}
           className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
           title="Click To Filter Articles"
@@ -176,6 +207,10 @@ export function Articles({ classNames = "" }: ArticlesProps) {
       {/* Filter Modal */}
       {showFilterModal && (
         <FilterModal onClose={() => setShowFilterModal(false)} />
+      )}
+      {/* Preference Modal */}
+      {showPreferenceModal && (
+        <PreferenceModal onClose={() => setShowPreferenceModal(false)} />
       )}
     </div>
   );
