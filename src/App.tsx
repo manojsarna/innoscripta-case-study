@@ -25,26 +25,14 @@ function App() {
     }
   }, [setTheme]);
 
-  // const { loading, query, loadNews } = useNewsStore((state) => state);
-
-  // useEffect(() => {
-  //   loadNews();
-  // }, [loadNews, query]);
-  // const isFetching = useIsFetching();
-
   // Memoize queryClient to prevent recreation on every render
   const queryClient = useMemo(() => new QueryClient(), []);
-
-  // useEffect(() => {
-  //   queryClient.clear();
-  // }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <div className={theme === "dark" ? "dark" : "light"}>
         <Container>
           <SearchBar />
-          {/* <Filters /> */}
           <Articles />
         </Container>
       </div>

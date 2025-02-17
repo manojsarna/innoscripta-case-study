@@ -3,8 +3,6 @@ import { useNewsFilterStore } from "../store";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
-// import { MdKeyboardArrowUp } from "react-icons/md";
-// import { MdKeyboardArrowDown } from "react-icons/md";
 
 interface FiltersProps {
   onClose: () => void;
@@ -14,10 +12,8 @@ export function Filters({ onClose }: FiltersProps) {
   const {
     selectedSource,
     setSelectedSource,
-    //sources,
     selectedCategory,
     setSelectedCategory,
-    //categories,
     selectedDate,
     setSelectedDate,
     resetFilters,
@@ -42,10 +38,6 @@ export function Filters({ onClose }: FiltersProps) {
   // Handle categories selection change
   const handleCategoriesChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      // const values = Array.from(
-      //   e.target.selectedOptions,
-      //   (option) => option.value
-      // );
       setSelectedCategory(e.target.value || null);
       onClose();
     },
@@ -85,26 +77,8 @@ export function Filters({ onClose }: FiltersProps) {
     onClose();
   }, [resetFilters, setSelectedDate, onClose]);
 
-  //const [isOpen, setIsOpen] = useState(false);
-
-  //const toggleAccordion = () => setIsOpen(!isOpen);
-
   return (
     <div className="w-full px-4 border-gray-300 rounded-md dark:bg-gray-800 dark:text-white mx-auto lg:max-w-screen-xl sm:max-w-xl md:max-w-full">
-      {/* <button
-        onClick={toggleAccordion}
-        className="p-2 border border-gray-300 rounded w-full text-left cursor-pointer"
-      >
-        <span className="flex justify-between items-center">
-          <span>Filters</span>
-          <span className="text-2xl">
-            {isOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-          </span>
-        </span>
-      </button>
-      {isOpen && (
-       
-      )} */}
       <div className="mt-4 w-full flex flex-wrap gap-4 justify-between bg-gray-100 dark:bg-gray-800 rounded-lg">
         {/* Source Filter */}
         <select
@@ -117,11 +91,6 @@ export function Filters({ onClose }: FiltersProps) {
           <option value="The News API">The News API</option>
           <option value="The Guardian">The Guardian</option>
           <option value="The New York Times">The New York Times</option>
-          {/* {sources.map((source) => (
-             <option key={source} value={source}>
-               {source}
-             </option>
-           ))} */}
         </select>
 
         {/* Categories Filter */}
@@ -143,11 +112,6 @@ export function Filters({ onClose }: FiltersProps) {
           <option value="Artificial Intelligence">
             Artificial Intelligence
           </option>
-          {/* {categories.map((category) => (
-             <option key={category} value={category}>
-               {category}
-             </option>
-           ))} */}
         </select>
 
         {/* Date Range Picker */}
