@@ -19,6 +19,10 @@ function App() {
   useEffect(() => {
     const initialTheme = getInitialTheme();
     setTheme(initialTheme);
+    // Redirect any path except "/" to home "/"
+    if (window.location.pathname !== "/") {
+      window.location.replace("/");
+    }
   }, [setTheme]);
 
   // const { loading, query, loadNews } = useNewsStore((state) => state);
