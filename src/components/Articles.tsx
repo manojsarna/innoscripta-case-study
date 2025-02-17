@@ -157,6 +157,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
         <button
           onClick={() => setShowFilterModal(true)}
           className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 cursor-pointer"
+          title="Click To Filter Articles"
         >
           <FaFilter className="w-5 h-5" />
         </button>
@@ -166,6 +167,7 @@ export function Articles({ classNames = "" }: ArticlesProps) {
           <button
             onClick={scrollToTop}
             className="bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 cursor-pointer"
+            title="Scroll To Top"
           >
             <FaArrowUp className="w-5 h-5" />
           </button>
