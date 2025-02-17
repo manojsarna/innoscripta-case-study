@@ -67,8 +67,8 @@ Make sure you have the following installed:
 ### 2️⃣ Clone the Repository
 
 ```sh
-git clone https://github.com/manojsarna/inno-news.git
-cd inno-news
+git clone https://github.com/manojsarna/innoscripta-case-study.git
+cd innoscripta-case-study
 ```
 
 ### 3️⃣ Install Dependencies
@@ -112,10 +112,10 @@ The app will be available at **http://localhost:5173/**
 
 ```sh
 # 1️⃣ Build the Docker image
-docker build -t inno-news .
+docker build -t innoscripta-case-study .
 
 # 2️⃣ Run the container
-docker run -p 5173:5173 inno-news
+docker run -p 5173:5173 innoscripta-case-study
 ```
 
 _App will be available at **http://localhost:5173/**._
