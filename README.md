@@ -32,15 +32,15 @@ To start using the Inno News you can visit the following link : [Inno News](http
 
 ### Core P0 Features
 
-✅ [Home Page - News Feed](https://innonews.netlify.app/)
-✅ [Filters - Data Source , Category, Date range](https://innonews.netlify.app/)
-✅ [Scroll To Top](https://innonews.netlify.app/)
-✅ [Infinte Scroll](https://innonews.netlify.app/)
-✅ [Responsive Design (Both Desktop and Mobile Responsive)](https://innonews.netlify.app/)
+- ✅ [Home Page - News Feed](https://innonews.netlify.app/)
+- ✅ [Filters - Data Source , Category, Date range](https://innonews.netlify.app/)
+- ✅ [Scroll To Top](https://innonews.netlify.app/)
+- ✅ [Infinte Scroll](https://innonews.netlify.app/)
+- ✅ [Responsive Design (Both Desktop and Mobile Responsive)](https://innonews.netlify.app/)
 
 ### Extra Features Added
 
-✅ **Dark/Light Mode** - Theme persistence with Zustand
+- ✅ **Dark/Light Mode** - Theme persistence with Zustand
 
 ---
 
